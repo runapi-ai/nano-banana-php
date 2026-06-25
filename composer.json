@@ -1,0 +1,49 @@
+{
+  "name": "runapi-ai/nano-banana",
+  "description": "RunAPI Nano Banana Composer package for PHP applications",
+  "type": "library",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "RunAPI",
+      "email": "contact@runapi.ai"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "runapi-ai/core": "^0.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "RunApi\\NanoBanana\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "RunApi\\NanoBanana\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "0.1.x-dev"
+    }
+  },
+  "minimum-stability": "stable",
+  "homepage": "https://runapi.ai/models/nano-banana",
+  "support": {
+    "source": "https://github.com/runapi-ai/nano-banana-php",
+    "docs": "https://runapi.ai/docs#sdk-nano-banana",
+    "issues": "https://github.com/runapi-ai/nano-banana-php/issues"
+  },
+  "keywords": [
+    "runapi",
+    "runapi-ai",
+    "php",
+    "composer",
+    "sdk",
+    "api",
+    "packagist",
+    "nano-banana",
+    "nano-banana-api"
+  ]
+}
