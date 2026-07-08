@@ -13,7 +13,7 @@ use RunApi\NanoBanana\Models\ImageTaskResponse;
 use RunApi\NanoBanana\Types;
 
 /**
- * Generates images from text prompts with model-specific options.
+ * Generates images from text prompts with various models and options.
  */
 readonly class TextToImage extends TypedConfiguredResource
 {
@@ -29,8 +29,6 @@ readonly class TextToImage extends TypedConfiguredResource
      *   output_resolution?: string,
      *   reference_image_urls?: list<string>
      * } $params
-     *
-     * nano-banana-2-lite requires aspect_ratio and does not support output_format or output_resolution.
      */
     public function create(array $params, ?RequestOptions $options = null): TaskCreateResponse
     {
@@ -60,8 +58,6 @@ readonly class TextToImage extends TypedConfiguredResource
      *   output_resolution?: string,
      *   reference_image_urls?: list<string>
      * } $params
-     *
-     * nano-banana-2-lite requires aspect_ratio and does not support output_format or output_resolution.
      */
     public function run(array $params, ?RequestOptions $options = null): CompletedImageTaskResponse
     {
