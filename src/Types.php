@@ -10,10 +10,10 @@ namespace RunApi\NanoBanana;
 final class Types
 {
     /** @var list<string> */
-    public const TEXT_TO_IMAGE_MODELS = ['nano-banana', 'nano-banana-2', 'nano-banana-pro'];
+    public const TEXT_TO_IMAGE_MODELS = ['nano-banana', 'nano-banana-2', 'nano-banana-2-lite', 'nano-banana-pro'];
 
     /** @var list<string> */
-    public const EDIT_IMAGE_MODELS = ['nano-banana-edit'];
+    public const EDIT_IMAGE_MODELS = ['nano-banana-2-lite', 'nano-banana-edit'];
 
     private function __construct()
     {

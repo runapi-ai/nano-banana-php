@@ -29,6 +29,13 @@ $task = $client->textToImage->create([
 
 $status = $client->textToImage->get($task->id);
 
+$editImageTask = $client->editImage->create([
+    'model' => 'nano-banana-2-lite',
+    'prompt' => 'Make it golden hour',
+    'aspect_ratio' => 'auto',
+    'source_image_urls' => ['https://cdn.runapi.ai/public/samples/image.jpg'],
+]);
+
 $result = $client->textToImage->run([
     'model' => 'nano-banana',
     'prompt' => 'A serene mountain lake at dawn',
