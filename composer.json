@@ -33,7 +33,7 @@
   "homepage": "https://runapi.ai/models/nano-banana",
   "support": {
     "source": "https://github.com/runapi-ai/nano-banana-php",
-    "docs": "https://runapi.ai/docs#sdk-nano-banana",
+    "docs": "https://runapi.ai/docs/resources/sdks",
     "issues": "https://github.com/runapi-ai/nano-banana-php/issues"
   },
   "keywords": [
