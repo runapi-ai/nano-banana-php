@@ -10,7 +10,6 @@ use RunApi\Core\RequestOptions;
 use RunApi\Core\Resources\TypedConfiguredResource;
 use RunApi\NanoBanana\Models\CompletedImageTaskResponse;
 use RunApi\NanoBanana\Models\ImageTaskResponse;
-use RunApi\NanoBanana\Types;
 
 /**
  * Modifies existing images based on text prompts.
@@ -79,10 +78,8 @@ readonly class EditImage extends TypedConfiguredResource
         return new self(
             $http,
             '/api/v1/nano_banana/edit_image',
-            'nano-banana/edit-image',
             ImageTaskResponse::class,
             CompletedImageTaskResponse::class,
-            Types::EDIT_IMAGE_MODELS,
             'edit-image',
             ImageTaskResponse::class,
             CompletedImageTaskResponse::class,

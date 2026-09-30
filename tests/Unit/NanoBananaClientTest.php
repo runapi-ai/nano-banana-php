@@ -27,16 +27,14 @@ final class NanoBananaClientTest extends TestCase
     public function testCreatePostsCompactedBodyToCorrectPath(): void
     {
         $transport = new QueueHttpClient([
-            new Response(200, [], '{"id":"task_1"}'),
-        ]);
+            new Response(200, [], '{"id":"task_1"}')]);
         $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $task = $client->textToImage->create([
             'model' => 'nano-banana',
             'prompt' => 'A product render',
             'callback_url' => '',
-            'seed' => null,
-        ]);
+            'seed' => null]);
 
         $body = json_decode((string) $transport->requests[0]->getBody(), true, flags: JSON_THROW_ON_ERROR);
 
@@ -50,16 +48,14 @@ final class NanoBananaClientTest extends TestCase
     public function testCreatePostsLiteBodyToCorrectPath(): void
     {
         $transport = new QueueHttpClient([
-            new Response(200, [], '{"id":"task_lite"}'),
-        ]);
+            new Response(200, [], '{"id":"task_lite"}')]);
         $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $task = $client->textToImage->create([
             'model' => 'nano-banana-2-lite',
             'prompt' => 'A product render',
             'aspect_ratio' => 'auto',
-            'reference_image_urls' => ['https://cdn.runapi.ai/public/samples/image.jpg'],
-        ]);
+            'reference_image_urls' => ['https://cdn.runapi.ai/public/samples/image.jpg']]);
 
         $body = json_decode((string) $transport->requests[0]->getBody(), true, flags: JSON_THROW_ON_ERROR);
 
@@ -74,46 +70,29 @@ final class NanoBananaClientTest extends TestCase
     public function testCreateDefaultsModelToLite(): void
     {
         $transport = new QueueHttpClient([
-            new Response(200, [], '{"id":"task_default_lite"}'),
-        ]);
+            new Response(200, [], '{"id":"task_default_lite"}')]);
         $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $client->textToImage->create([
             'prompt' => 'A product render',
-            'aspect_ratio' => 'auto',
-        ]);
+            'aspect_ratio' => 'auto']);
 
         $body = json_decode((string) $transport->requests[0]->getBody(), true, flags: JSON_THROW_ON_ERROR);
         self::assertSame('nano-banana-2-lite', $body['model']);
     }
 
-    public function testRejectsLiteOutputControls(): void
-    {
-        $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: new QueueHttpClient([]), maxRetries: 0));
 
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('output_resolution is not allowed when model is nano-banana-2-lite');
-
-        $client->textToImage->create([
-            'model' => 'nano-banana-2-lite',
-            'prompt' => 'A product render',
-            'aspect_ratio' => 'auto',
-            'output_resolution' => '1k',
-        ]);
-    }
 
     public function testRunReturnsTypedCompletedResponseAndPreservesUnknownFields(): void
     {
         $transport = new QueueHttpClient([
             new Response(200, [], '{"id":"task_1"}'),
-            new Response(200, [], '{"id":"task_1","status":"completed","images":[{"url":"https://file.runapi.ai/result"}],"extra_field":"kept"}'),
-        ]);
+            new Response(200, [], '{"id":"task_1","status":"completed","images":[{"url":"https://file.runapi.ai/result"}],"extra_field":"kept","usage":{"cost":0.05}}')]);
         $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $result = $client->textToImage->run([
             'model' => 'nano-banana',
-            'prompt' => 'A product render',
-        ]);
+            'prompt' => 'A product render']);
 
         self::assertInstanceOf(CompletedImageTaskResponse::class, $result);
         self::assertSame('https://file.runapi.ai/result', $result->images[0]->url);
@@ -125,8 +104,7 @@ final class NanoBananaClientTest extends TestCase
     {
         $transport = new QueueHttpClient([
             new Response(200, [], '{"id":"task_1"}'),
-            new Response(200, [], '{"id":"task_1","status":"completed"}'),
-        ]);
+            new Response(200, [], '{"id":"task_1","status":"completed","usage":{"cost":0.05}}')]);
         $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $this->expectException(ValidationException::class);
@@ -134,36 +112,21 @@ final class NanoBananaClientTest extends TestCase
 
         $client->textToImage->run([
             'model' => 'nano-banana',
-            'prompt' => 'A product render',
-        ]);
+            'prompt' => 'A product render']);
     }
 
-    public function testRejectsInvalidContractEnum(): void
-    {
-        $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: new QueueHttpClient([]), maxRetries: 0));
 
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('aspect_ratio must be one of the allowed values');
-
-        $client->textToImage->create([
-        'model' => 'nano-banana',
-        'prompt' => 'A product render',
-        'aspect_ratio' => 'not-valid',
-        ]);
-    }
 
     public function testSecondaryResourceUsesItsOwnPath(): void
     {
         $transport = new QueueHttpClient([
-            new Response(200, [], '{"id":"task_2"}'),
-        ]);
+            new Response(200, [], '{"id":"task_2"}')]);
         $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $client->editImage->create([
             'model' => 'nano-banana-edit',
             'prompt' => 'A product render',
-            'source_image_urls' => ['https://cdn.runapi.ai/public/samples/image.jpg'],
-        ]);
+            'source_image_urls' => ['https://cdn.runapi.ai/public/samples/image.jpg']]);
 
         self::assertSame('/api/v1/nano_banana/edit_image', $transport->requests[0]->getUri()->getPath());
     }
@@ -171,16 +134,14 @@ final class NanoBananaClientTest extends TestCase
     public function testEditImageSupportsLiteModel(): void
     {
         $transport = new QueueHttpClient([
-            new Response(200, [], '{"id":"task_lite"}'),
-        ]);
+            new Response(200, [], '{"id":"task_lite"}')]);
         $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $client->editImage->create([
             'model' => 'nano-banana-2-lite',
             'prompt' => 'Replace the background',
             'source_image_urls' => ['https://cdn.runapi.ai/public/samples/image.jpg'],
-            'aspect_ratio' => '16:9',
-        ]);
+            'aspect_ratio' => '16:9']);
 
         $body = json_decode((string) $transport->requests[0]->getBody(), true);
         self::assertSame('nano-banana-2-lite', $body['model']);
@@ -191,32 +152,17 @@ final class NanoBananaClientTest extends TestCase
     public function testEditImageDefaultsModelToLite(): void
     {
         $transport = new QueueHttpClient([
-            new Response(200, [], '{"id":"task_lite"}'),
-        ]);
+            new Response(200, [], '{"id":"task_lite"}')]);
         $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
 
         $client->editImage->create([
             'prompt' => 'Replace the background',
             'source_image_urls' => ['https://cdn.runapi.ai/public/samples/image.jpg'],
-            'aspect_ratio' => '16:9',
-        ]);
+            'aspect_ratio' => '16:9']);
 
         $body = json_decode((string) $transport->requests[0]->getBody(), true);
         self::assertSame('nano-banana-2-lite', $body['model']);
     }
 
-    public function testEditImageRejectsLiteOutputFormat(): void
-    {
-        $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: new QueueHttpClient([]), maxRetries: 0));
 
-        $this->expectExceptionMessage('output_format is not allowed when model is nano-banana-2-lite');
-
-        $client->editImage->create([
-            'model' => 'nano-banana-2-lite',
-            'prompt' => 'Replace the background',
-            'source_image_urls' => ['https://cdn.runapi.ai/public/samples/image.jpg'],
-            'aspect_ratio' => 'auto',
-            'output_format' => 'png',
-        ]);
-    }
 }

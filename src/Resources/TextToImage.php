@@ -10,7 +10,6 @@ use RunApi\Core\RequestOptions;
 use RunApi\Core\Resources\TypedConfiguredResource;
 use RunApi\NanoBanana\Models\CompletedImageTaskResponse;
 use RunApi\NanoBanana\Models\ImageTaskResponse;
-use RunApi\NanoBanana\Types;
 
 /**
  * Generates images from text prompts with model-specific options.
@@ -81,10 +80,8 @@ readonly class TextToImage extends TypedConfiguredResource
         return new self(
             $http,
             '/api/v1/nano_banana/text_to_image',
-            'nano-banana/text-to-image',
             ImageTaskResponse::class,
             CompletedImageTaskResponse::class,
-            Types::TEXT_TO_IMAGE_MODELS,
             'text-to-image',
             ImageTaskResponse::class,
             CompletedImageTaskResponse::class,
