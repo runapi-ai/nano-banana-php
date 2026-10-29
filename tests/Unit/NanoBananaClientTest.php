@@ -13,6 +13,7 @@ use RunApi\NanoBanana\Models\CompletedImageTaskResponse;
 use RunApi\NanoBanana\NanoBananaClient;
 use RunApi\NanoBanana\Resources\EditImage;
 use RunApi\NanoBanana\Resources\TextToImage;
+use RunApi\NanoBanana\Types;
 
 final class NanoBananaClientTest extends TestCase
 {
@@ -65,6 +66,32 @@ final class NanoBananaClientTest extends TestCase
         self::assertSame('auto', $body['aspect_ratio']);
         self::assertArrayNotHasKey('output_resolution', $body);
         self::assertArrayNotHasKey('output_format', $body);
+    }
+
+    public function testV21ReferenceRequestAndImageResponse(): void
+    {
+        $transport = new QueueHttpClient([
+            new Response(200, [], '{"id":"task-v21"}'),
+            new Response(200, [], '{"id":"task-v21","status":"completed","images":[{"url":"https://cdn.runapi.ai/public/samples/result.png"}]}')]);
+        $client = new NanoBananaClient(new ClientOptions(apiKey: 'k', httpClient: $transport, maxRetries: 0));
+        $params = [
+            'model' => 'nano-banana-2.1',
+            'prompt' => 'Replace the background with a meadow',
+            'reference_image_urls' => ['https://cdn.runapi.ai/public/samples/image.jpg'],
+            'output_resolution' => '2k',
+            'output_format' => 'jpg'];
+
+        $task = $client->textToImage->create($params);
+        $result = $client->textToImage->get($task->id);
+
+        self::assertContains('nano-banana-2.1', Types::TEXT_TO_IMAGE_MODELS);
+        self::assertSame('task-v21', $task->id);
+        self::assertSame('POST', $transport->requests[0]->getMethod());
+        self::assertSame('/api/v1/nano_banana/text_to_image', $transport->requests[0]->getUri()->getPath());
+        self::assertSame($params, json_decode((string) $transport->requests[0]->getBody(), true, flags: JSON_THROW_ON_ERROR));
+        self::assertSame('GET', $transport->requests[1]->getMethod());
+        self::assertSame('/api/v1/nano_banana/text_to_image/task-v21', $transport->requests[1]->getUri()->getPath());
+        self::assertSame('https://cdn.runapi.ai/public/samples/result.png', $result->images[0]->url);
     }
 
     public function testCreateDefaultsModelToLite(): void

@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.3.0](https://github.com/runapi-ai/nano-banana-php/releases/tag/v0.3.0) - 2026-10-29
+
+### Added
+- Support nano-banana-2.1 for single-image generation and editing at 1K, 2K, and 4K.
+
+
 ## [v0.2.0](https://github.com/runapi-ai/nano-banana-php/releases/tag/v0.2.0) - 2026-09-30
 
 ### Changed
